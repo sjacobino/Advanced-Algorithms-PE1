@@ -5,6 +5,7 @@ import java.io.FileReader;
 
 public class ComputeTardiness {	
 	public static ProblemInstance readInstance(String filename){
+		System.out.println(filename);
 		ProblemInstance instance = null;
 		
 		try {
