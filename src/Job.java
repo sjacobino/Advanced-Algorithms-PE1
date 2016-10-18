@@ -19,4 +19,12 @@ public class Job implements Comparable<Job> {
     public int compareTo(Job o) {
         return this.dueTime - o.dueTime;
     }
+
+    public int getLength() {
+        return length;
+    }
+
+    public int getDueTime() {
+        return dueTime;
+    }
 }

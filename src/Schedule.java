@@ -5,6 +5,8 @@ public class Schedule implements Comparable<Schedule> {
 	// The main advantage is that in a search-tree there is a lot of overlap
 	// between schedules, this implementation stores this overlap only once
 	private Schedule previous;
+	private Schedule next;
+    private Job job;
 	private int jobID;
 	private int jobLength;
 	
@@ -18,6 +20,7 @@ public class Schedule implements Comparable<Schedule> {
 		this.jobID = -1;
 		this.jobLength = 0;
 		this.tardiness = 0;
+        this.job = new Job(0, 0);
 	}
 	
 	// add an additional job to the schedule
@@ -26,9 +29,11 @@ public class Schedule implements Comparable<Schedule> {
 		this.jobID = jobID;
 		this.jobLength = jobLength;
 		this.tardiness = Math.max(0, getTotalTime() - jobDueTime);
+        this.job = new Job(jobLength, jobDueTime);
 		
 		if(previous != null) {
 			this.tardiness += previous.getTardiness();
+			previous.next = this;
 		}
 	}
 	
@@ -52,6 +57,10 @@ public class Schedule implements Comparable<Schedule> {
 		if(previous != null) time += previous.getTotalTime();
 		return time;
 	}
+
+	public Job getJob() { return job; }
+
+	public Schedule getNext() { return next; }
 	
 	public int getTardiness(){
 		return tardiness;
