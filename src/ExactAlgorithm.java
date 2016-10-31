@@ -1,4 +1,5 @@
 import com.sun.tools.internal.xjc.SchemaCache;
+import com.sun.tools.javah.Util;
 
 import java.util.ArrayList;
 
@@ -7,12 +8,10 @@ import java.util.ArrayList;
  */
 public class ExactAlgorithm {
     private int numJobs;
-    private int[][] jobs;
     private  ArrayList<Job> sortedJobs;
 
     public ExactAlgorithm(ProblemInstance instance) {
         numJobs = instance.getNumJobs();
-        jobs = instance.getJobs();
         sortedJobs = instance.getSortedJobs();
     }
 
@@ -24,9 +23,10 @@ public class ExactAlgorithm {
 
         // Find job k with largest processing time
 
-        for(int i = 0; i < sortedJobs.size(); i++) {
+        for(int i = 1; i <= numJobs; i++) {
             Job j = sortedJobs.get(i);
             if (j.getLength() >= longestProcessingTime){
+                longestProcessingTime = j.getLength();
                 kIndex = i;
             }
 
@@ -39,6 +39,15 @@ public class ExactAlgorithm {
             }
 
         }
+
+        /*Schedule current = firstSchedule;
+        for (int i = 1; i < sortedJobs.size(); i++){
+            Job j = current.getJob();
+            System.out.println("job " + i + " length: " + j.getLength() + " due time: " + j.getDueTime());
+            current = current.getNext();
+
+        }*/
+
 
         // tardiness of complete schedule
         int tardiness = totalWeightedTardiness(firstSchedule, kIndex, 0);
@@ -57,10 +66,13 @@ public class ExactAlgorithm {
             return 0;
         }
 
-        System.out.println("Schedule height: " + s.getHeight());
-        System.out.println("Index of longest job: " + k);
-        System.out.println("Starting time: " + t);
+        //System.out.println("Schedule height: " + s.getHeight());
+        //System.out.println("Index of longest job: " + k);
+        //System.out.println("Starting time: " + t);
 
+        //System.out.println("s height: " + s.getHeight() + " s depth: " +s.getDepth());
+
+        // n = s.getHeight()
         if (s.getHeight() == 1) {
             Job j = s.getJob();
             int weight = 1;
@@ -68,7 +80,7 @@ public class ExactAlgorithm {
         }
 
         Job jobK = sortedJobs.get(k);
-        int smallestTardiness = Integer.MAX_VALUE;
+        int smallestTardiness = -1;
 
         // iterate over delta options to find smallest tardiness
         for (int delta = 0; delta <= s.getHeight() - k; delta++) {
@@ -85,34 +97,44 @@ public class ExactAlgorithm {
             Schedule current = s;
             int leftLongestProcessingTime = 0;
             int leftKIndex = 0;
-            for (int i = 0; i <= k + delta; i ++) {
+
+           // System.out.println("Left schedule");
+            for (int i = 1; i <= k + delta; i ++) {
+                if (i == k){
+                    current = current.getNext();
+                    continue;
+                }
+
                 Job j = current.getJob();
-                //if (j.getLength() < jobK.getLength()) {
-                    leftSchedule = new Schedule(leftSchedule, i, j.getLength(), j.getDueTime());
 
-                    if (firstLeftSchedule == null) {
-                        firstLeftSchedule = leftSchedule;
-                    }
+                //System.out.println("Job " + i + " length: " + j.getLength());
+                leftSchedule = new Schedule(leftSchedule, i, j.getLength(), j.getDueTime());
 
-                    if (j.getLength() >= leftLongestProcessingTime) {
-                        leftLongestProcessingTime = j.getLength();
-                        leftKIndex = i;
-                    }
+                if (firstLeftSchedule == null) {
+                    firstLeftSchedule = leftSchedule;
+                }
 
-                //}
+                if (j.getLength() >= leftLongestProcessingTime) {
+                    leftLongestProcessingTime = j.getLength();
+                    leftKIndex = i;
+                }
 
                 completionK += j.getLength();
 
-                current = s.getNext();
+                current = current.getNext();
 
             }
 
-            System.out.println("left schedule depth: " + leftSchedule.getDepth());
+           /* if (leftSchedule != null) {
+                System.out.println("left schedule depth: " + leftSchedule.getDepth());
+            }*/
 
             int rightLongestProcessingTime = 0;
             int rightKIndex = 0;
+            //System.out.println("Right schedule");
             for (int i = k + delta + 1; i <=  s.getHeight(); i ++) {
                 Job j = current.getJob();
+                //System.out.println("Job " + i + " length: " + j.getLength());
                 rightSchedule = new Schedule(rightSchedule, i, j.getLength(), j.getDueTime());
 
                 if (firstRightSchedule == null) {
@@ -124,19 +146,28 @@ public class ExactAlgorithm {
                     rightKIndex = i;
                 }
 
-                current = s.getNext();
+                current = current.getNext();
             }
 
-            System.out.println("right schedule depth: " + rightSchedule.getDepth());
+            /*if (rightSchedule != null) {
+                System.out.println("right schedule depth: " + rightSchedule.getDepth());
+            }*/
 
             int tardinessLeft = totalWeightedTardiness(firstLeftSchedule, leftKIndex, t);
+            System.out.println("Tardiness left " + tardinessLeft);
             int tardinessRight = totalWeightedTardiness(firstRightSchedule, rightKIndex, completionK);
+            System.out.println("Tardiness right " + tardinessRight);
 
             int tardinessK = Math.max(0, completionK - dueTimeK);
 
-            int totalTardiness = tardinessLeft + weightK * tardinessK + tardinessRight;
+            int totalTardiness = tardinessLeft + (weightK * tardinessK) + tardinessRight;
+            System.out.println("Total tardiness " + totalTardiness);
 
-            smallestTardiness = Math.min(smallestTardiness, totalTardiness);
+            if (smallestTardiness == -1){
+                smallestTardiness = totalTardiness;
+            }else {
+                smallestTardiness = Math.min(smallestTardiness, totalTardiness);
+            }
         }
 
         return smallestTardiness;
