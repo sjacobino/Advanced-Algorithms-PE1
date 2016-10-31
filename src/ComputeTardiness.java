@@ -39,9 +39,9 @@ public class ComputeTardiness {
 		ProblemInstance instance = readInstance(args[0]);
 
 //
-		Greedy greedy = new Greedy(instance);
-		Schedule greedySchedule = greedy.getSchedule();
-		System.out.println(greedySchedule.getTardiness());
+		//Greedy greedy = new Greedy(instance);
+		//Schedule greedySchedule = greedy.getSchedule();
+		//System.out.println(greedySchedule.getTardiness());
 //
 //		BestFirst bestFirst = new BestFirst(instance);
 //		Schedule bestFirstSchedule = bestFirst.getSchedule();
