@@ -38,14 +38,13 @@ public class ComputeTardiness {
     public static void main (String args[]) {
 		ProblemInstance instance = readInstance(args[0]);
 
-//
-		//Greedy greedy = new Greedy(instance);
-		//Schedule greedySchedule = greedy.getSchedule();
-		//System.out.println(greedySchedule.getTardiness());
-//
-//		BestFirst bestFirst = new BestFirst(instance);
-//		Schedule bestFirstSchedule = bestFirst.getSchedule();
-//
+		Greedy greedy = new Greedy(instance);
+		Schedule greedySchedule = greedy.getSchedule();
+		System.out.println("Greedy tardiness: " + greedySchedule.getTardiness());
+
+		//BestFirst bestFirst = new BestFirst(instance);
+        //Schedule bestFirstSchedule = bestFirst.getSchedule();
+        //System.out.println("Best first tardiness: " + bestFirstSchedule.getTardiness());
 
 		ExactAlgorithm exactAlgorithm = new ExactAlgorithm(instance);
 		exactAlgorithm.getSchedule();

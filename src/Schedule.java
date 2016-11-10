@@ -15,14 +15,6 @@ public class Schedule implements Comparable<Schedule> {
 	// if memory is an issue, however, try calculating it
 	private int tardiness;
 	
-	public Schedule(){
-		this.previous = null;
-		this.jobID = -1;
-		this.jobLength = 0;
-		this.tardiness = 0;
-        this.job = new Job(0, 0);
-	}
-	
 	// add an additional job to the schedule
 	public Schedule(Schedule s, int jobID, int jobLength, int jobDueTime){		
 		this.previous = s;
@@ -75,4 +67,45 @@ public class Schedule implements Comparable<Schedule> {
 	public boolean containsJob(int job){
 		return (jobID == job) || (previous != null && previous.containsJob(job));
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Schedule schedule = (Schedule) o;
+
+        if (jobID != schedule.jobID) return false;
+        if (jobLength != schedule.jobLength) return false;
+        if (previous != null ? !previous.equals(schedule.previous, true) : schedule.previous != null) return false;
+        return next != null ? next.equals(schedule.next, false) : schedule.next == null;
+
+    }
+
+    public boolean equals(Object o, boolean backwards) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Schedule schedule = (Schedule) o;
+
+        if (jobID != schedule.jobID) return false;
+        if (jobLength != schedule.jobLength) return false;
+        if (backwards) {
+            if (previous != null ? !previous.equals(schedule.previous, backwards) : schedule.previous != null) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return next != null ? next.equals(schedule.next, backwards) : schedule.next == null;
+        }
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = jobID;
+        result = 31 * result + jobLength;
+        return result;
+    }
 }
