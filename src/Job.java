@@ -4,10 +4,10 @@ import java.util.Comparator;
  * Created by Sharif on 17/10/2016.
  */
 public class Job implements Comparable<Job> {
-    private int length;
-    private int dueTime;
+    private double length;
+    private double dueTime;
 
-    public Job(int length, int dueTime){
+    public Job(double length, double dueTime){
         this.length = length;
         this.dueTime = dueTime;
     }
@@ -17,14 +17,14 @@ public class Job implements Comparable<Job> {
     */
     @Override
     public int compareTo(Job o) {
-        return this.dueTime - o.dueTime;
+        return (int) (this.dueTime - o.dueTime);
     }
 
-    public int getLength() {
+    public double getLength() {
         return length;
     }
 
-    public int getDueTime() {
+    public double getDueTime() {
         return dueTime;
     }
 }

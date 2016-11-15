@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class ExactAlgorithm {
     private int numJobs;
     private  ArrayList<Job> sortedJobs;
-    private HashMap<SubProblem, Integer> T;
+    private HashMap<SubProblem, Double> T;
 
     public ExactAlgorithm(ProblemInstance instance) {
         numJobs = instance.getNumJobs();
@@ -17,7 +17,7 @@ public class ExactAlgorithm {
 
     public Schedule getSchedule(){
         int kIndex = 1;
-        int longestProcessingTime = 0;
+        double longestProcessingTime = 0;
         Schedule schedule = null;
         Schedule firstSchedule = null;
 
@@ -40,7 +40,7 @@ public class ExactAlgorithm {
         }
 
         // tardiness of complete schedule
-        int tardiness = totalWeightedTardiness(firstSchedule, kIndex, 0);
+        double tardiness = totalWeightedTardiness(firstSchedule, kIndex, 0);
         System.out.println("Total tardiness: " + tardiness);
 
         return null;
@@ -51,7 +51,7 @@ public class ExactAlgorithm {
      * @param k index of longest job in s
      * @param t start time for schedule
      */
-    public int totalWeightedTardiness(Schedule s, int k, int t){
+    public double totalWeightedTardiness(Schedule s, int k, int t){
         SubProblem subProblem = new SubProblem(s, k, t);
         if (T.containsKey(subProblem)){
             return T.get(subProblem);
@@ -64,7 +64,7 @@ public class ExactAlgorithm {
         if (s.getHeight() == 1) {
             Job j = s.getJob();
             int weight = 1;
-            int result = weight * Math.max(0, t + j.getLength() - j.getDueTime());
+            double result = weight * Math.max(0, t + j.getLength() - j.getDueTime());
             T.put(subProblem, result);
             return result;
         }
@@ -77,9 +77,9 @@ public class ExactAlgorithm {
         }
         Job jobK = scheduleK.getJob();
         int weightK = 1;
-        int dueTimeK = jobK.getDueTime();
+        double dueTimeK = jobK.getDueTime();
 
-        int smallestTardiness = -1;
+        double smallestTardiness = -1;
         Schedule bestSchedule = null;
 
         // iterate over delta options to find smallest tardiness
@@ -90,7 +90,7 @@ public class ExactAlgorithm {
             Schedule leftSchedule = null;
             Schedule firstLeftSchedule = null;
 
-            int leftLongestProcessingTime = 0;
+            double leftLongestProcessingTime = 0;
             int leftKIndex = 1;
             int leftCounter = 1;
 
@@ -121,7 +121,7 @@ public class ExactAlgorithm {
             Schedule rightSchedule = null;
             Schedule firstRightSchedule = null;
 
-            int rightLongestProcessingTime = 0;
+            double rightLongestProcessingTime = 0;
             int rightKIndex = 1;
             int rightCounter = 1;
 
@@ -142,12 +142,12 @@ public class ExactAlgorithm {
                 rightCounter++;
             }
 
-            int tardinessLeft = totalWeightedTardiness(firstLeftSchedule, leftKIndex, t);
-            int tardinessRight = totalWeightedTardiness(firstRightSchedule, rightKIndex, completionK);
+            double tardinessLeft = totalWeightedTardiness(firstLeftSchedule, leftKIndex, t);
+            double tardinessRight = totalWeightedTardiness(firstRightSchedule, rightKIndex, completionK);
 
-            int tardinessK = Math.max(0, completionK - dueTimeK);
+            double tardinessK = Math.max(0, completionK - dueTimeK);
 
-            int totalTardiness = tardinessLeft + (weightK * tardinessK) + tardinessRight;
+            double totalTardiness = tardinessLeft + (weightK * tardinessK) + tardinessRight;
 
             if (smallestTardiness == -1){
                 smallestTardiness = totalTardiness;

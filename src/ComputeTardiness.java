@@ -10,12 +10,12 @@ public class ComputeTardiness {
 		
 		try {
 			int numJobs = 0;
-			int[][] jobs = null;
+			double[][] jobs = null;
 			
 			Scanner sc = new Scanner(new BufferedReader(new FileReader(filename)));
 			if(sc.hasNextInt()){
 				numJobs = sc.nextInt();
-				jobs = new int[numJobs][2];
+				jobs = new double[numJobs][2];
 				int nextJobID = 0;
 			
 				while (sc.hasNextInt() && nextJobID < numJobs) {
@@ -48,5 +48,16 @@ public class ComputeTardiness {
 
 		ExactAlgorithm exactAlgorithm = new ExactAlgorithm(instance);
 		exactAlgorithm.getSchedule();
+
+		double Tmax = 0;
+		Schedule current = greedySchedule;
+		while (current.getDepth() > 1) {
+			if (current.getTardiness() > Tmax) {
+				Tmax = current.getTardiness();
+			}
+			current = current.getPrevious();
+		}
+
+		ApproximationAlgorithm approximationAlgorithm = new ApproximationAlgorithm(instance.scale(0.1, Tmax));
 	}
 }
