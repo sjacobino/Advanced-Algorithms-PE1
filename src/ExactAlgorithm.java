@@ -151,9 +151,13 @@ public class ExactAlgorithm {
 
             if (smallestTardiness == -1){
                 smallestTardiness = totalTardiness;
+                bestSchedule = Schedule.mergeSchedules(leftSchedule, jobK, rightSchedule);
 
             }else {
-                smallestTardiness = Math.min(smallestTardiness, totalTardiness);
+                if (totalTardiness < smallestTardiness) {
+                    smallestTardiness = totalTardiness;
+                    bestSchedule = Schedule.mergeSchedules(leftSchedule, jobK, rightSchedule);
+                }
             }
         }
 

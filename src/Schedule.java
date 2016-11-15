@@ -70,6 +70,40 @@ public class Schedule implements Comparable<Schedule> {
 		return (jobID == job) || (previous != null && previous.containsJob(job));
 	}
 
+    public static Schedule mergeSchedules(Schedule left, Job k, Schedule right){
+        if (right == null){
+            return new Schedule(left.lastSchedule(), 0, k.getLength(), k.getDueTime()).lastSchedule();
+        } else if (left == null) {
+            Schedule kSchedule = new Schedule(null, 0, k.getLength(), k.getDueTime());
+            right.firstSchedule().setPrevious(kSchedule);
+            return right.lastSchedule();
+        } else {
+            Schedule leftSchedule = new Schedule(left.lastSchedule(), 0, k.getLength(), k.getDueTime());
+            right.firstSchedule().setPrevious(leftSchedule.lastSchedule());
+            return right.lastSchedule();
+        }
+    }
+
+    public void setPrevious(Schedule previous) {
+        this.previous = previous;
+    }
+
+    public Schedule lastSchedule(){
+        if (next == null) {
+            return this;
+        }else {
+            return next.lastSchedule();
+        }
+    }
+
+    public Schedule firstSchedule(){
+        if (previous == null) {
+            return this;
+        } else {
+            return previous.firstSchedule();
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
