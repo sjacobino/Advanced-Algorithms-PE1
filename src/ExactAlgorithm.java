@@ -22,7 +22,6 @@ public class ExactAlgorithm {
         Schedule firstSchedule = null;
 
         // Find job k with largest processing time
-
         for(int i = 1; i <= numJobs; i++) {
             Job j = sortedJobs.get(i);
             if (j.getLength() >= longestProcessingTime){
@@ -40,18 +39,8 @@ public class ExactAlgorithm {
 
         }
 
-        Schedule current = firstSchedule;
-        for (int i = 1; i <= numJobs; i++){
-            Job j = current.getJob();
-            //System.out.println("job " + i + " length: " + j.getLength() + " due time: " + j.getDueTime());
-            current = current.getNext();
-
-        }
-
-        //System.out.println("Ordered tardiness: " + schedule.getTardiness());
-
         // tardiness of complete schedule
-        int tardiness = totalWeightedTardiness(firstSchedule, kIndex, 0, "");
+        int tardiness = totalWeightedTardiness(firstSchedule, kIndex, 0);
         System.out.println("Total tardiness: " + tardiness);
 
         return null;
@@ -62,18 +51,15 @@ public class ExactAlgorithm {
      * @param k index of longest job in s
      * @param t start time for schedule
      */
-    public int totalWeightedTardiness(Schedule s, int k, int t, String x){
+    public int totalWeightedTardiness(Schedule s, int k, int t){
         SubProblem subProblem = new SubProblem(s, k, t);
         if (T.containsKey(subProblem)){
-            //System.out.println("Reusing solution");
             return T.get(subProblem);
         }
 
         if(s == null){
             return 0;
         }
-
-        //System.out.println("s height: " + s.getHeight() + " s depth: " +s.getDepth() + " kIndex: " + k + " t: "+ t + " x: " + x);
 
         if (s.getHeight() == 1) {
             Job j = s.getJob();
@@ -83,27 +69,31 @@ public class ExactAlgorithm {
             return result;
         }
 
-        Job jobK = sortedJobs.get(k);
+        Schedule scheduleK = s;
+        int scheduleKIndex = k;
+        while (scheduleKIndex > 1){
+            scheduleK = scheduleK.getNext();
+            scheduleKIndex--;
+        }
+        Job jobK = scheduleK.getJob();
+        int weightK = 1;
+        int dueTimeK = jobK.getDueTime();
+
         int smallestTardiness = -1;
+        Schedule bestSchedule = null;
 
         // iterate over delta options to find smallest tardiness
         for (int delta = 0; delta <= s.getHeight() - k; delta++) {
-            // System.out.println("delta: " + delta);
+            int completionK = t;
+            Schedule current = s;
+
             Schedule leftSchedule = null;
             Schedule firstLeftSchedule = null;
-            Schedule rightSchedule = null;
-            Schedule firstRightSchedule = null;
 
-            int weightK = 1;
-            int dueTimeK = jobK.getDueTime();
-            int completionK = t;
-
-            Schedule current = s;
             int leftLongestProcessingTime = 0;
             int leftKIndex = 1;
-
-           //System.out.println("Left schedule");
             int leftCounter = 1;
+
             for (int i = 1; i <= k + delta; i ++) {
                 Job j = current.getJob();
                 completionK += j.getLength();
@@ -113,7 +103,6 @@ public class ExactAlgorithm {
                     continue;
                 }
 
-                //System.out.println("Job " + leftCounter + " length: " + j.getLength());
                 leftSchedule = new Schedule(leftSchedule, leftCounter, j.getLength(), j.getDueTime());
 
                 if (firstLeftSchedule == null) {
@@ -127,20 +116,17 @@ public class ExactAlgorithm {
 
                 current = current.getNext();
                 leftCounter++;
-
             }
 
-           /* if (leftSchedule != null) {
-                System.out.println("left schedule depth: " + leftSchedule.getDepth());
-            }*/
+            Schedule rightSchedule = null;
+            Schedule firstRightSchedule = null;
 
             int rightLongestProcessingTime = 0;
-            int rightKIndex = 0;
-            //System.out.println("Right schedule");
+            int rightKIndex = 1;
             int rightCounter = 1;
+
             for (int i = k + delta + 1; i <=  s.getHeight(); i++) {
                 Job j = current.getJob();
-                //System.out.println("Job " + rightCounter + " length: " + j.getLength());
                 rightSchedule = new Schedule(rightSchedule, rightCounter, j.getLength(), j.getDueTime());
 
                 if (firstRightSchedule == null) {
@@ -156,22 +142,16 @@ public class ExactAlgorithm {
                 rightCounter++;
             }
 
-            /*if (rightSchedule != null) {
-                System.out.println("right schedule depth: " + rightSchedule.getDepth());
-            }*/
-
-            int tardinessLeft = totalWeightedTardiness(firstLeftSchedule, leftKIndex, t, x + "l" + delta);
-            //System.out.println("Tardiness left " + tardinessLeft);
-            int tardinessRight = totalWeightedTardiness(firstRightSchedule, rightKIndex, completionK, x + "r" + delta);
-            //System.out.println("Tardiness right " + tardinessRight);
+            int tardinessLeft = totalWeightedTardiness(firstLeftSchedule, leftKIndex, t);
+            int tardinessRight = totalWeightedTardiness(firstRightSchedule, rightKIndex, completionK);
 
             int tardinessK = Math.max(0, completionK - dueTimeK);
 
             int totalTardiness = tardinessLeft + (weightK * tardinessK) + tardinessRight;
-            //System.out.println("Total tardiness " + totalTardiness);
 
             if (smallestTardiness == -1){
                 smallestTardiness = totalTardiness;
+
             }else {
                 smallestTardiness = Math.min(smallestTardiness, totalTardiness);
             }
