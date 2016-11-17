@@ -6,14 +6,15 @@ public class ProblemInstance {
     private double[][] jobs; //size = [num_jobs][2], for every job [0] is the length, [1] is the due time
     private ArrayList<Job> sortedJobs;
 
+
     public ProblemInstance(int numJobs, double[][] jobs) {
         this.numJobs = numJobs;
         this.jobs = jobs;
 
         this.sortedJobs = new ArrayList<Job>();
-        this.sortedJobs.add(new Job(0, 0));
-        for (int i = 1; i <= jobs.length; i++) {
-            this.sortedJobs.add(new Job(jobs[i - 1][0], jobs[i - 1][1]));
+        //this.sortedJobs.add(new Job(-1, -1));
+        for (int i = 0; i < jobs.length; i++) {
+            this.sortedJobs.add(new Job(jobs[i ][0], jobs[i][1]));
         }
         Collections.sort(this.sortedJobs);
     }
@@ -39,6 +40,7 @@ public class ProblemInstance {
             scaledJobs[i][0] = q;
             scaledJobs[i][1] = d;
         }
+
         return new ProblemInstance(numJobs, scaledJobs);
     }
 

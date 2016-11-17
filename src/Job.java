@@ -27,4 +27,8 @@ public class Job implements Comparable<Job> {
     public double getDueTime() {
         return dueTime;
     }
+
+    public void print() {
+        System.out.println("Job(p: " + length + ", d: " + dueTime + ")");
+    }
 }

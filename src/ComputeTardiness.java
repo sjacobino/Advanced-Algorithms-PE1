@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -40,24 +41,21 @@ public class ComputeTardiness {
 
 		Greedy greedy = new Greedy(instance);
 		Schedule greedySchedule = greedy.getSchedule();
-		System.out.println("Greedy tardiness: " + greedySchedule.getTardiness());
+		System.out.println("Greedy tardiness: " + (int) greedySchedule.getTardiness());
 
 		//BestFirst bestFirst = new BestFirst(instance);
         //Schedule bestFirstSchedule = bestFirst.getSchedule();
         //System.out.println("Best first tardiness: " + bestFirstSchedule.getTardiness());
 
 		ExactAlgorithm exactAlgorithm = new ExactAlgorithm(instance);
-		exactAlgorithm.getSchedule();
+        Schedule exactSchedule = exactAlgorithm.getSchedule();
+        System.out.println("Exact tardiness: " + (int) exactSchedule.getTardiness());
+        //exactSchedule.printComplete();
 
-		double Tmax = 0;
-		Schedule current = greedySchedule;
-		while (current.getDepth() > 1) {
-			if (current.getTardiness() > Tmax) {
-				Tmax = current.getTardiness();
-			}
-			current = current.getPrevious();
-		}
+		ApproximationAlgorithm approximationAlgorithm = new ApproximationAlgorithm(instance);
+        Schedule approximationSchedule = approximationAlgorithm.getSchedule(3);
+        System.out.println("Approximated tardiness: " + (int) approximationSchedule.getTardiness());
+        //approximationSchedule.printComplete();
 
-		ApproximationAlgorithm approximationAlgorithm = new ApproximationAlgorithm(instance.scale(0.1, Tmax));
 	}
 }
