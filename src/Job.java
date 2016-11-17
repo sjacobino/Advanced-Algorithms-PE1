@@ -7,7 +7,7 @@ public class Job implements Comparable<Job> {
     private double length;
     private double dueTime;
 
-    public Job(double length, double dueTime){
+    public Job(double length, double dueTime) {
         this.length = length;
         this.dueTime = dueTime;
     }

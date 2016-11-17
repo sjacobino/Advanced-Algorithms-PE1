@@ -7,7 +7,7 @@ public class TardinessAndSchedule {
     private double tardiness;
     private Schedule schedule;
 
-    public TardinessAndSchedule(double tardiness, Schedule schedule){
+    public TardinessAndSchedule(double tardiness, Schedule schedule) {
         this.tardiness = tardiness;
         this.schedule = schedule;
     }

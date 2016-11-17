@@ -151,7 +151,8 @@ public class Schedule implements Comparable<Schedule> {
 
     public Schedule clone() {
         Schedule current = this.firstSchedule();
-        Schedule clone = new Schedule(null, current.jobID, current.originalID, current.job.getLength(), current.job.getDueTime());;
+        Schedule clone = new Schedule(null, current.jobID, current.originalID, current.job.getLength(), current.job.getDueTime());
+        ;
         while (current.getNext() != null) {
             current = current.getNext();
             clone = new Schedule(clone, current.jobID, current.originalID, current.job.getLength(), current.job.getDueTime());
@@ -159,7 +160,7 @@ public class Schedule implements Comparable<Schedule> {
         return clone;
     }
 
-    public void recalculateTardiness(){
+    public void recalculateTardiness() {
         Schedule current = this.firstSchedule();
         int i = 1;
         current.tardiness = Math.max(0, current.getTotalTime() - current.job.getDueTime());
@@ -265,8 +266,8 @@ public class Schedule implements Comparable<Schedule> {
                 current = current.next;
             }
             return current;
-        } catch (NullPointerException e){
-            return  null;
+        } catch (NullPointerException e) {
+            return null;
         }
     }
 }

@@ -8,7 +8,7 @@ import java.util.Collection;
 public class SubProblem {
     private Object[] objects;
 
-    public SubProblem(Object... objects){
+    public SubProblem(Object... objects) {
         this.objects = new Object[objects.length];
         for (int i = 0; i < objects.length; i++) {
             this.objects[i] = objects[i];

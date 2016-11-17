@@ -10,7 +10,7 @@ public class ApproximationAlgorithm {
         this.problemInstance = instance;
     }
 
-    public Schedule getSchedule(double epsilon){
+    public Schedule getSchedule(double epsilon) {
         // Get EDD schedule from greedy algorithm
         Greedy greedy = new Greedy(problemInstance);
         Schedule greedySchedule = greedy.getSchedule();

@@ -14,7 +14,7 @@ public class ProblemInstance {
         this.sortedJobs = new ArrayList<Job>();
         //this.sortedJobs.add(new Job(-1, -1));
         for (int i = 0; i < jobs.length; i++) {
-            this.sortedJobs.add(new Job(jobs[i ][0], jobs[i][1]));
+            this.sortedJobs.add(new Job(jobs[i][0], jobs[i][1]));
         }
         Collections.sort(this.sortedJobs);
     }
