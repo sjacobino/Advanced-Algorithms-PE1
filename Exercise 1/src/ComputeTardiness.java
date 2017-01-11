@@ -1,12 +1,9 @@
+import java.io.*;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 
 public class ComputeTardiness {
     public static ProblemInstance readInstance(String filename) {
-        System.out.println(filename);
         ProblemInstance instance = null;
 
         try {
@@ -37,11 +34,17 @@ public class ComputeTardiness {
 
     // reads a problem, and outputs the result of both greedy and best-first
     public static void main(String args[]) {
-        ProblemInstance instance = readInstance(args[0]);
+        Test.testTimeSize();
+        if(true)
+            return;
+
+
+        int epsilon = Integer.parseInt(args[0]);
+        ProblemInstance instance = readInstance(args[1]);
 
         Greedy greedy = new Greedy(instance);
         Schedule greedySchedule = greedy.getSchedule();
-        System.out.println("Greedy tardiness: " + (int) greedySchedule.getTardiness());
+        //System.out.println("Greedy tardiness: " + (int) greedySchedule.getTardiness());
 
         //BestFirst bestFirst = new BestFirst(instance);
         //Schedule bestFirstSchedule = bestFirst.getSchedule();
@@ -49,13 +52,15 @@ public class ComputeTardiness {
 
         ExactAlgorithm exactAlgorithm = new ExactAlgorithm(instance);
         Schedule exactSchedule = exactAlgorithm.getSchedule();
-        System.out.println("Exact tardiness: " + (int) exactSchedule.getTardiness());
+        //System.out.println("Exact tardiness: " + (int) exactSchedule.getTardiness());
         //exactSchedule.printComplete();
 
         ApproximationAlgorithm approximationAlgorithm = new ApproximationAlgorithm(instance);
-        Schedule approximationSchedule = approximationAlgorithm.getSchedule(3);
-        System.out.println("Approximated tardiness: " + (int) approximationSchedule.getTardiness());
+        Schedule approximationSchedule = approximationAlgorithm.getSchedule(epsilon);
+        //System.out.println("Approximated tardiness: " + (int) approximationSchedule.getTardiness());
         //approximationSchedule.printComplete();
+
+        System.out.println((int) exactSchedule.getTardiness() + " " + (int) approximationSchedule.getTardiness());
 
     }
 }
