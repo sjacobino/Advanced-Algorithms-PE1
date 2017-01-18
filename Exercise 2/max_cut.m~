@@ -70,12 +70,10 @@ for n = 10 : 15 : 70
                         end
                     end
 
-                    if max_cut_weight > lowerbound
-                       lowerbound = max_cut_weight; 
-                    end
+                    cuts = [cuts max_cut_weight];
                 end
                 
-                fprintf(resultfile, '%d; %s; %d; %d; %s; %d; %s\n', n, p{1}, weight, TRIALS, solvertime, lowerbound, upperbound);
+                fprintf(resultfile, '%d; %s; %d; %d; %s; %s; %s\n', n, p{1}, weight, TRIALS, solvertime, lowerbound, upperbound);
        
            end
        end
