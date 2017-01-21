@@ -1,4 +1,4 @@
-resultfile = fopen('results1.txt', 'w')
+resultfile = fopen('results3.txt', 'w')
 W = [1, 25, 50, 75, 100];
 TRS = [1, 25, 50, 75, 100];
 P = {'05', '10'};
@@ -23,6 +23,7 @@ for n = 10 : 15 : 70
                     weights(edges(i, 2) + 1, edges(i, 1) + 1) = edges(i, 3);
                 end
 
+                tic;
                 ops = sdpsettings('solver','sedumi');
                 Y = sdpvar(nodes, nodes);
                 objective = 0;
@@ -75,8 +76,7 @@ for n = 10 : 15 : 70
                     end
                 end
                 
-                fprintf(resultfile, '%d; %s; %d; %d; %s; %d; %s\n', n, p{1}, weight, TRIALS, solvertime, lowerbound, upperbound);
-       
+                fprintf(resultfile, '%d; %s; %d; %d; %s; %d; %s\n', n, p{1}, weight, TRIALS, toc, lowerbound, upperbound);
            end
        end
    end
